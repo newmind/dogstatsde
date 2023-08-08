@@ -84,7 +84,7 @@ build_metric_line(Type, {Name, Value, SampleRate, Tags}, State) ->
     LineStart = io_lib:format("~s:~.3f|~s|@~.2f", [prepend_global_prefix(Name, State), float(Value),
                                                     metric_type_to_str(Type), float(SampleRate)]),
     TagLine = build_tag_line(Tags, State),
-    [LineStart, TagLine].
+    [LineStart, TagLine, "\n"].
 
 prepend_global_prefix(Name, #state{prefix=""}) -> Name;
 prepend_global_prefix(Name, #state{prefix=GlobalPrefix}) -> [GlobalPrefix, $., Name].
@@ -97,7 +97,7 @@ build_event_line({Title, Text, Type, Priority, Tags}, State) ->
     LineStart = io_lib:format("_e{~b,~b}:~s|~s|t:~s|p:~s", [TitleLen, TextLen, TitleBin,
                                                             TextBin, Type, Priority]),
     TagLine = build_tag_line(Tags, State),
-    [LineStart, TagLine].
+    [LineStart, TagLine, "\n"].
 
 build_tag_line(Tags, #state{tags=GlobalTags}) ->
     maps:fold(fun (Key, Val, []) ->
